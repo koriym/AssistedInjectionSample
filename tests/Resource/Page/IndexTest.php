@@ -1,26 +1,16 @@
 <?php
 namespace Amashige\Test\Resource\Page;
 
-use BEAR\Package\AppInjector;
-use BEAR\Resource\ResourceInterface;
 use PHPUnit\Framework\TestCase;
 
 class IndexTest extends TestCase
 {
-    /**
-     * @var ResourceInterface
-     */
-    private $resource;
-
-    protected function setUp() : void
+    public function testAssistedInjectionWorks()
     {
-        $this->resource = (new AppInjector('Amashige\Test', 'app'))->getInstance(ResourceInterface::class);
-    }
-
-    public function testOnGet()
-    {
-        $ro = $this->resource->get('page://self/index', ['name' => 'BEAR.Sunday']);
-        $this->assertSame(200, $ro->code);
-        $this->assertSame('Hello BEAR.Sunday', $ro->body['greeting']);
+        $GLOBALS['argv'] = ['', 'get', '/test'];
+        ob_start();
+        (require dirname(__DIR__, 3) . '/bootstrap.php')('cli-api-app');
+        $actual = ob_get_clean();
+        $this->assertStringContainsString('injected": true', $actual);
     }
 }

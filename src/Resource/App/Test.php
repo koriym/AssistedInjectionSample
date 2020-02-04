@@ -12,7 +12,9 @@ class Test extends ResourceObject
      */
     public function onGet(HogeInterface $hoge = null) : ResourceObject
     {
-        var_dump($hoge);
+        $this->body = [
+            'injected' => $hoge instanceof HogeInterface
+        ];
 
         return $this;
     }
